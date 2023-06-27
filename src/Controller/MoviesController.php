@@ -11,10 +11,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class MoviesController extends AbstractController
 {
     private $em;
-    public function __construct(EntityManagerInterface $em)
+    private $movieRepository;#
+    public function __construct(MovieRepository $movieRepository)
     {
-        $this->em = $em;
+        $this->movieRepository = $movieRepository;
     }
+
+
+    // public function __construct(EntityManagerInterface $em)
+    // {
+    //     $this->em = $em;
+    // }
 
 
 
@@ -35,14 +42,44 @@ class MoviesController extends AbstractController
         return $this->render('index.html.twig');
     }
 
-    #[Route('/movies', name: 'movies')]
-    public function index(MovieRepository $movieRepository): Response
+
+    // #[Route('/movies/{id}',methods: ['GET'], name: 'movies')]
+    // public function index(MovieRepository $movieRepository): Response
+    // {
+    //     // $movies = $movieRepository->findAll();
+    //     // dd($movies);
+    //     $movies = $this->movieRepository->findAll();
+    //     // dd($movies);
+
+    //     return $this->render('movies/index.html.twig', [
+    //         'movies' => $movies
+    //     ]);
+
+    #[Route('/movies',methods: ['GET'], name: 'movies')]
+    public function index(): Response
     {
-        $movies = $movieRepository->findAll();
+        // $movies = $movieRepository->findAll();
+        // dd($movies);
+        $movies = $this->movieRepository->findAll();
+        // dd($movies);
 
-        dd($movies);
+        return $this->render('movies/index.html.twig', [
+            'movies' => $movies
+        ]);
+    }
 
-        return $this->render('index.html.twig');
+        #[Route('/movies/{id}',methods: ['GET'], name: 'movies')]
+         public function show($id): Response
+    {
+        // $movies = $movieRepository->findAll();
+        // dd($movies);
+        $movie = $this->movieRepository->find($id);
+        // dd($movies);
+
+        return $this->render('movies/show.html.twig', [
+            'movies' => $movie
+        ]);
+    }
 
         // $movies = ["Avengers: Endgame", "Inception", "Loki"];
 
